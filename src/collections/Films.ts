@@ -15,6 +15,11 @@ export const Films: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'synopsis', 'createdAt'],
   },
+  versions: {
+    drafts: {
+      autosave: true,
+    },
+  },
   fields: [
     {
       name: 'title',
@@ -78,12 +83,10 @@ export const Films: CollectionConfig = {
         {
           name: 'question',
           type: 'text',
-          required: true,
         },
         {
           name: 'answer',
           type: 'textarea',
-          required: true,
         },
       ],
     },
@@ -95,12 +98,10 @@ export const Films: CollectionConfig = {
         {
           name: 'question',
           type: 'text',
-          required: true,
         },
         {
           name: 'answer',
           type: 'textarea',
-          required: true,
         },
       ],
     },
@@ -112,12 +113,10 @@ export const Films: CollectionConfig = {
         {
           name: 'question',
           type: 'text',
-          required: true,
         },
         {
           name: 'answer',
           type: 'textarea',
-          required: true,
         },
       ],
     },

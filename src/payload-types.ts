@@ -315,20 +315,21 @@ export interface Film {
     image1?: (number | null) | Media;
     image2?: (number | null) | Media;
   };
-  qa1: {
-    question: string;
-    answer: string;
+  qa1?: {
+    question?: string | null;
+    answer?: string | null;
   };
-  qa2: {
-    question: string;
-    answer: string;
+  qa2?: {
+    question?: string | null;
+    answer?: string | null;
   };
-  qa3: {
-    question: string;
-    answer: string;
+  qa3?: {
+    question?: string | null;
+    answer?: string | null;
   };
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -584,6 +585,7 @@ export interface FilmsSelect<T extends boolean = true> {
       };
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
