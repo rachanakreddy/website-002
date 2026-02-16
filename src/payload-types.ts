@@ -99,9 +99,11 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     'featured-film': FeaturedFilm;
+    directory: Directory;
   };
   globalsSelect: {
     'featured-film': FeaturedFilmSelect<false> | FeaturedFilmSelect<true>;
+    directory: DirectorySelect<false> | DirectorySelect<true>;
   };
   locale: null;
   user: User;
@@ -334,13 +336,13 @@ export interface Film {
  */
 export interface SignUp {
   id: number;
+  /**
+   * Check to display this person on the public directory page.
+   */
+  inDirectory?: boolean | null;
   name: string;
   email: string;
   whereDidYouHear?: string | null;
-  /**
-   * If checked, this person's name and email will be displayed on the directory page.
-   */
-  inDirectory?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -588,10 +590,10 @@ export interface FilmsSelect<T extends boolean = true> {
  * via the `definition` "sign-ups_select".
  */
 export interface SignUpsSelect<T extends boolean = true> {
+  inDirectory?: T;
   name?: T;
   email?: T;
   whereDidYouHear?: T;
-  inDirectory?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -663,11 +665,36 @@ export interface FeaturedFilm {
   createdAt?: string | null;
 }
 /**
+ * Select sign-ups to display on the public directory page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "directory".
+ */
+export interface Directory {
+  id: number;
+  /**
+   * Search and select sign-ups to add to the directory.
+   */
+  members?: (number | SignUp)[] | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "featured-film_select".
  */
 export interface FeaturedFilmSelect<T extends boolean = true> {
   film?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "directory_select".
+ */
+export interface DirectorySelect<T extends boolean = true> {
+  members?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

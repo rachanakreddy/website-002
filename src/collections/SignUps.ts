@@ -13,9 +13,20 @@ export const SignUps: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'email', 'whereDidYouHear', 'inDirectory', 'createdAt'],
+    defaultColumns: ['name', 'email', 'inDirectory', 'createdAt'],
+    listSearchableFields: ['name', 'email'],
   },
   fields: [
+    {
+      name: 'inDirectory',
+      label: 'Show in Directory',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description: 'Check to display this person on the public directory page.',
+      },
+    },
     {
       name: 'name',
       type: 'text',
@@ -30,15 +41,6 @@ export const SignUps: CollectionConfig = {
       name: 'whereDidYouHear',
       label: 'Where did you hear about us?',
       type: 'text',
-    },
-    {
-      name: 'inDirectory',
-      label: 'In Directory',
-      type: 'checkbox',
-      defaultValue: false,
-      admin: {
-        description: 'If checked, this person\'s name and email will be displayed on the directory page.',
-      },
     },
   ],
   timestamps: true,

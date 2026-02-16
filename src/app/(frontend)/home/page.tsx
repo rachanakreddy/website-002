@@ -1,17 +1,46 @@
 'use client'
 
-import React from 'react'
-import { NavBar } from '@/components/navigation'
+import React, { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { HomeNavBar } from '@/components/navigation'
 
 export default function HomePage() {
+  const router = useRouter()
+
+  // Prefetch other pages for faster navigation
+  useEffect(() => {
+    router.prefetch('/featured')
+    router.prefetch('/directory')
+  }, [router])
   return (
-    <main
-      className="fixed inset-0 w-screen h-screen bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: 'url(/backgrounds/home-bg.png)' }}
-    >
+    <main className="fixed inset-0 w-screen h-screen overflow-hidden">
+      {/* Background - plaster texture */}
+      <img
+        src="/backgrounds/home-bg-plaster.png"
+        alt=""
+        className="absolute w-full h-full object-cover"
+        style={{ zIndex: 0 }}
+      />
+
+      {/* Big hand and small hand overlay */}
+      <img
+        src="/accents/big-hand-smallhand.png"
+        alt=""
+        className="absolute w-full h-full object-contain pointer-events-none"
+        style={{ zIndex: 1 }}
+      />
+
+      {/* Plasterwall text overlay */}
+      <img
+        src="/accents/plasterwall-home-text.png"
+        alt=""
+        className="absolute w-full h-full object-contain pointer-events-none"
+        style={{ zIndex: 2 }}
+      />
+
       {/* Navigation */}
-      <header className="fixed top-0 left-0 right-0 z-50 p-4 md:p-6">
-        <NavBar className="justify-center" />
+      <header className="fixed top-0 left-0 right-0 z-50 p-1 md:p-2">
+        <HomeNavBar />
       </header>
     </main>
   )

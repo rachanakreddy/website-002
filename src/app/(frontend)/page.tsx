@@ -5,16 +5,41 @@ import { useRouter } from 'next/navigation'
 
 export default function LandingPage() {
   const router = useRouter()
-  const [showWiggling, setShowWiggling] = useState(false)
+  // Initialize mobile check - default to true to prevent video flash, then correct on mount
+  const [isMobile, setIsMobile] = useState(true)
+  const [isHydrated, setIsHydrated] = useState(false)
+  const [showWiggling, setShowWiggling] = useState(true) // Start true, will be set false on desktop
   const [showEntry, setShowEntry] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const landingVideoRef = useRef<HTMLVideoElement>(null)
   const wigglingVideoRef = useRef<HTMLVideoElement>(null)
   const entryVideoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const imageRef = useRef<HTMLImageElement | null>(null)
 
-  // Handle transition from landing to wiggling
+  // Check if mobile on mount
   useEffect(() => {
+    const checkMobile = () => window.innerWidth < 768
+    const mobile = checkMobile()
+    setIsMobile(mobile)
+    setIsHydrated(true)
+
+    if (mobile) {
+      // On mobile, skip landing video and show interactive state immediately
+      setShowWiggling(true)
+      setTimeout(() => {
+        wigglingVideoRef.current?.play().catch(console.error)
+      }, 100)
+    } else {
+      // On desktop, show landing video first
+      setShowWiggling(false)
+    }
+  }, [])
+
+  // Handle transition from landing to wiggling (desktop only)
+  useEffect(() => {
+    if (!isHydrated || isMobile) return
+
     const landingVideo = landingVideoRef.current
     const wigglingVideo = wigglingVideoRef.current
 
@@ -23,6 +48,7 @@ export default function LandingPage() {
       landingVideo.play().catch(console.error)
 
       const handleEnded = () => {
+        // Transition directly from landing to wiggling - no loading
         setShowWiggling(true)
         // Ensure wiggling video plays
         wigglingVideo.currentTime = 0
@@ -35,7 +61,7 @@ export default function LandingPage() {
         landingVideo.removeEventListener('ended', handleEnded)
       }
     }
-  }, [])
+  }, [isMobile, isHydrated])
 
   // Prefetch home page for seamless transition
   useEffect(() => {
@@ -77,34 +103,85 @@ export default function LandingPage() {
     }
   }, [])
 
+  // Trigger entry sequence
+  const triggerEntry = useCallback(() => {
+    if (showEntry || isLoading) return // Prevent double trigger
+
+    // Show loading when user clicks enter
+    setIsLoading(true)
+    wigglingVideoRef.current?.pause()
+
+    // Brief loading, then play entry video
+    setTimeout(() => {
+      setShowEntry(true)
+      setIsLoading(false)
+      entryVideoRef.current?.play().catch(console.error)
+    }, 500)
+  }, [showEntry, isLoading])
+
   // Check if click/touch is on a non-transparent pixel
   const handleInteraction = useCallback((clientX: number, clientY: number, target: HTMLImageElement) => {
     const canvas = canvasRef.current
-    if (!canvas || !imageRef.current) return
+    if (!canvas || !imageRef.current) {
+      // Fallback: if canvas not ready, trigger entry anyway
+      triggerEntry()
+      return
+    }
 
     const rect = target.getBoundingClientRect()
-    const x = clientX - rect.left
-    const y = clientY - rect.top
+    const naturalWidth = imageRef.current.width
+    const naturalHeight = imageRef.current.height
 
-    const scaleX = imageRef.current.width / rect.width
-    const scaleY = imageRef.current.height / rect.height
-    const imgX = Math.floor(x * scaleX)
-    const imgY = Math.floor(y * scaleY)
+    // Calculate the rendered size with object-contain
+    const containerAspect = rect.width / rect.height
+    const imageAspect = naturalWidth / naturalHeight
+
+    let renderedWidth, renderedHeight, offsetX, offsetY
+
+    if (containerAspect > imageAspect) {
+      // Container is wider - image is constrained by height
+      renderedHeight = rect.height
+      renderedWidth = rect.height * imageAspect
+      offsetX = (rect.width - renderedWidth) / 2
+      offsetY = 0
+    } else {
+      // Container is taller - image is constrained by width
+      renderedWidth = rect.width
+      renderedHeight = rect.width / imageAspect
+      offsetX = 0
+      offsetY = (rect.height - renderedHeight) / 2
+    }
+
+    // Get click position relative to the container
+    const clickX = clientX - rect.left
+    const clickY = clientY - rect.top
+
+    // Check if click is within the rendered image area
+    if (clickX < offsetX || clickX > offsetX + renderedWidth ||
+        clickY < offsetY || clickY > offsetY + renderedHeight) {
+      return // Click is outside the image
+    }
+
+    // Map click to image pixel coordinates
+    const imgX = Math.floor((clickX - offsetX) * (naturalWidth / renderedWidth))
+    const imgY = Math.floor((clickY - offsetY) * (naturalHeight / renderedHeight))
 
     const ctx = canvas.getContext('2d')
     if (ctx) {
-      const pixel = ctx.getImageData(imgX, imgY, 1, 1).data
-      const alpha = pixel[3]
+      try {
+        const pixel = ctx.getImageData(imgX, imgY, 1, 1).data
+        const alpha = pixel[3]
 
-      // Only play entry video if clicking on non-transparent pixel (alpha > 10)
-      if (alpha > 10) {
-        setShowEntry(true)
-        // Stop wiggling video and play entry video
-        wigglingVideoRef.current?.pause()
-        entryVideoRef.current?.play()
+        // Only play entry video if clicking on non-transparent pixel (alpha > 10)
+        if (alpha > 10) {
+          triggerEntry()
+        }
+      } catch (e) {
+        // Fallback on error
+        triggerEntry()
       }
     }
-  }, [])
+  }, [triggerEntry])
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLImageElement>) => {
     handleInteraction(e.clientX, e.clientY, e.currentTarget)
@@ -120,6 +197,15 @@ export default function LandingPage() {
 
   return (
     <main className="fixed inset-0 w-screen h-screen bg-black overflow-hidden">
+      {/* Loading overlay */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center">
+          <div className="text-white text-xl" style={{ fontFamily: 'lores-12, monospace' }}>
+            loading...
+          </div>
+        </div>
+      )}
+
       {/* Hidden canvas for pixel detection */}
       <canvas ref={canvasRef} className="hidden" />
 
@@ -169,29 +255,31 @@ export default function LandingPage() {
           onClick={handleClick}
           onTouchStart={handleTouch}
           draggable={false}
-          className="absolute w-full h-full object-cover cursor-pointer select-none touch-none"
+          className="absolute w-full h-full object-contain cursor-pointer select-none touch-none"
           style={{ zIndex: 3, WebkitTapHighlightColor: 'transparent' }}
         />
 
-        {/* Landing video - top layer, fades out to reveal everything below */}
-        <video
-          ref={landingVideoRef}
-          autoPlay
-          muted
-          playsInline
-          preload="auto"
-          disablePictureInPicture
-          disableRemotePlayback
-          className={`absolute w-full h-full object-cover transition-opacity duration-150 ease-out ${showWiggling ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-          style={{
-            zIndex: 4,
-            willChange: 'opacity, transform',
-            transform: 'translateZ(0)',
-            backfaceVisibility: 'hidden',
-          }}
-        >
-          <source src="/videos/landing-page.mp4" type="video/mp4" />
-        </video>
+        {/* Landing video - top layer, fades out to reveal everything below (desktop only) */}
+        {isHydrated && !isMobile && (
+          <video
+            ref={landingVideoRef}
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            disablePictureInPicture
+            disableRemotePlayback
+            className={`absolute w-full h-full object-cover transition-opacity duration-150 ease-out ${showWiggling ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+            style={{
+              zIndex: 4,
+              willChange: 'opacity, transform',
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden',
+            }}
+          >
+            <source src="/videos/landing-page.mp4" type="video/mp4" />
+          </video>
+        )}
 
         {/* Entry video - plays after clicking enter, then navigates to /home */}
         <video

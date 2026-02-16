@@ -10,6 +10,7 @@ import { Media } from './collections/Media'
 import { SignUps } from './collections/SignUps'
 import { Users } from './collections/Users'
 import { FeaturedFilm } from './globals/FeaturedFilm'
+import { Directory } from './globals/Directory'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -29,7 +30,7 @@ export default buildConfig({
   }),
   collections: [Media, Users, Films, SignUps],
   cors: [process.env.NEXT_PUBLIC_SERVER_URL || ''].filter(Boolean),
-  globals: [FeaturedFilm],
+  globals: [FeaturedFilm, Directory],
   plugins: [],
   secret: process.env.PAYLOAD_SECRET,
   sharp,

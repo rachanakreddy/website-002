@@ -26,8 +26,9 @@ export default async function FeaturedPage() {
         style={{
           backgroundImage: 'url(/backgrounds/featured-bg.png)',
           backgroundSize: '100% auto',
-          backgroundPosition: 'top center',
-          height: 'calc(100vw * 3000 / 2360)',
+          backgroundPosition: 'bottom center',
+          minHeight: '100vh',
+          height: 'calc(100vw * 2200 / 2360)',
         }}
       >
         <header className="fixed top-0 left-0 right-0 z-50 p-4 md:p-6">

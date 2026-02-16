@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { NavBar } from '@/components/navigation'
 
@@ -118,26 +118,26 @@ function SignUpForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 w-full">
-      <div className="flex justify-end pr-8">
+    <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8 w-full">
+      <div className="flex justify-center md:justify-end md:pr-8">
         <input
           type="text"
           placeholder="name"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           required
-          className="w-56 h-16 bg-white/50 border border-gray-200 text-lg text-center focus:outline-none focus:border-gray-400"
+          className="w-full max-w-[200px] md:w-56 h-14 md:h-16 bg-white/50 border border-gray-200 text-base md:text-lg text-center focus:outline-none focus:border-gray-400"
           style={{ fontFamily: 'Arial, sans-serif', color: darkGray }}
         />
       </div>
-      <div className="flex justify-end pr-[30%]">
+      <div className="flex justify-center md:justify-end md:pr-[30%]">
         <input
           type="email"
           placeholder="email"
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           required
-          className="w-56 h-24 bg-white/50 border border-gray-200 text-lg text-center focus:outline-none focus:border-gray-400"
+          className="w-full max-w-[200px] md:w-56 h-20 md:h-24 bg-white/50 border border-gray-200 text-base md:text-lg text-center focus:outline-none focus:border-gray-400"
           style={{ fontFamily: 'Arial, sans-serif', color: darkGray }}
         />
       </div>
@@ -147,15 +147,15 @@ function SignUpForm() {
           placeholder="where did you hear about us"
           value={formData.whereDidYouHear}
           onChange={(e) => setFormData({ ...formData, whereDidYouHear: e.target.value })}
-          className="w-full h-40 bg-white/50 border border-gray-200 text-lg text-center focus:outline-none focus:border-gray-400"
+          className="w-full h-32 md:h-40 bg-white/50 border border-gray-200 text-base md:text-lg text-center focus:outline-none focus:border-gray-400"
           style={{ fontFamily: 'Arial, sans-serif', color: darkGray }}
         />
       </div>
-      <div className="flex justify-center pt-6">
+      <div className="flex justify-center pt-4 md:pt-6">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="text-2xl hover:scale-150 transition-all duration-300"
+          className="text-lg md:text-2xl hover:scale-110 md:hover:scale-150 transition-all duration-300"
           style={{ fontFamily: 'Arial, sans-serif', color: darkGray }}
         >
           {isSubmitting ? 'signing up...' : 'sign up for our newsletter'}
@@ -178,6 +178,16 @@ export default function FeaturedPageClient({
   qa3,
 }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => window.innerWidth < 768
+    setIsMobile(checkMobile())
+
+    const handleResize = () => setIsMobile(checkMobile())
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const handleWatch = () => {
     if (videoRef.current) {
@@ -188,12 +198,14 @@ export default function FeaturedPageClient({
 
   return (
     <main
-      className="w-full bg-no-repeat overflow-y-auto"
+      className="w-full bg-no-repeat overflow-x-hidden overflow-y-auto"
       style={{
         backgroundImage: 'url(/backgrounds/featured-bg.png)',
         backgroundSize: '100% auto',
-        backgroundPosition: 'top center',
-        height: 'calc(100vw * 3000 / 2360)',
+        backgroundPosition: isMobile ? 'center center' : 'bottom center',
+        backgroundColor: '#e5e5e5',
+        minHeight: '100vh',
+        height: isMobile ? 'auto' : 'calc(100vw * 2200 / 2360)',
         fontFamily: 'Arial, sans-serif',
         color: darkGray
       }}
@@ -203,12 +215,12 @@ export default function FeaturedPageClient({
         <NavBar className="justify-center" />
       </header>
 
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-8 md:gap-12 pt-20 pb-8 md:pt-24 md:pb-12">
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-8 md:gap-12 pt-20 pb-8 md:pt-24 md:pb-12 px-4 md:px-0">
         {/* Left Column */}
         <div className="space-y-6">
           {/* Big Video Player */}
           {videoUrl && (
-            <div className="w-full max-w-[605px] pl-8 md:pl-12">
+            <div className="w-full max-w-[605px] md:pl-12">
               <video
                 ref={videoRef}
                 src={videoUrl}
@@ -221,11 +233,11 @@ export default function FeaturedPageClient({
           )}
 
           {/* Title and Watch Button */}
-          <div className="flex items-baseline justify-between max-w-[605px] pl-8 md:pl-12">
-            <h1 className="text-2xl font-normal" style={{ fontFamily: 'Arial, sans-serif', color: darkGray }}>{title}</h1>
+          <div className="flex items-baseline justify-between max-w-[605px] md:pl-12">
+            <h1 className="text-xl md:text-2xl font-normal" style={{ fontFamily: 'Arial, sans-serif', color: darkGray }}>{title}</h1>
             <button
               onClick={handleWatch}
-              className="text-2xl hover:scale-150 transition-all duration-300"
+              className="text-xl md:text-2xl hover:scale-150 transition-all duration-300"
               style={{ fontFamily: 'Arial, sans-serif', color: '#999' }}
             >
               watch
@@ -233,12 +245,12 @@ export default function FeaturedPageClient({
           </div>
 
           {/* Synopsis - Center aligned */}
-          <p className="text-xs leading-relaxed max-w-[605px] text-center pl-8 md:pl-12" style={{ fontFamily: 'Arial, sans-serif', color: darkGray }}>
+          <p className="text-xs leading-relaxed max-w-[605px] text-center md:pl-12" style={{ fontFamily: 'Arial, sans-serif', color: darkGray }}>
             {synopsis}
           </p>
 
           {/* Optional Media - maintains space even when empty */}
-          <div className="flex gap-4 min-h-28 pl-8 md:pl-12">
+          <div className="flex gap-4 min-h-28 md:pl-12">
             {image1Url && (
               <div className="w-28 h-28 relative border border-gray-400">
                 <Image
@@ -263,9 +275,9 @@ export default function FeaturedPageClient({
 
           {/* Q&A Section */}
           <div className="pt-4">
-            <h3 className="mb-6" style={{ color: darkGray }}>
-              <span style={{ fontFamily: '"lores-12", sans-serif', fontSize: '42px', fontWeight: 'bold' }}>question</span>
-              <span style={{ fontFamily: '"Good Times", sans-serif', fontSize: '42px' }}>&ANSWER</span>
+            <h3 className="mb-6 text-[24px] md:text-[42px]" style={{ color: darkGray }}>
+              <span style={{ fontFamily: '"lores-12", sans-serif', fontWeight: 'bold' }}>question</span>
+              <span style={{ fontFamily: '"Good Times", sans-serif' }}>&ANSWER</span>
             </h3>
 
             <QAItem
