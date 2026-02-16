@@ -70,15 +70,15 @@ export default async function FeaturedPage() {
 
   return (
     <FeaturedPageClient
-      title={film.title}
-      synopsis={film.synopsis}
+      title={film.title || ''}
+      synopsis={film.synopsis || ''}
       videoUrl={videoUrl}
       longInformation={film.longInformation}
       image1Url={image1?.url ?? undefined}
       image2Url={image2?.url ?? undefined}
-      qa1={film.qa1}
-      qa2={film.qa2}
-      qa3={film.qa3}
+      qa1={film.qa1 || { question: '', answer: '' }}
+      qa2={film.qa2 || { question: '', answer: '' }}
+      qa3={film.qa3 || { question: '', answer: '' }}
     />
   )
 }
