@@ -3,16 +3,23 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { NavBar } from '@/components/navigation'
 
+// Disable caching to always fetch fresh data
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 async function getDirectoryMembers() {
   const payload = await getPayload({ config: configPromise })
 
   const directory = await payload.findGlobal({
     slug: 'directory',
-    depth: 1,
+    depth: 2,
   })
 
   // Return the members array with populated sign-up data
-  return (directory?.members as any[]) || []
+  const members = (directory?.members as any[]) || []
+
+  // Filter out any unpopulated relationships (just IDs)
+  return members.filter(member => member && typeof member === 'object' && member.name)
 }
 
 export default async function DirectoryPage() {

@@ -14,6 +14,9 @@ export const Users: CollectionConfig = {
   admin: {
     defaultColumns: ['name', 'email'],
     useAsTitle: 'name',
+    components: {
+      beforeListTable: ['/components/admin/InviteUserButton'],
+    },
   },
   auth: true,
   fields: [

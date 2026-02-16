@@ -5,15 +5,33 @@ import { Film, Media } from '@/payload-types'
 import FeaturedPageClient from './page.client'
 import { NavBar } from '@/components/navigation'
 
+// Disable caching to always fetch fresh data
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 async function getFeaturedFilm() {
   const payload = await getPayload({ config: configPromise })
 
   const featuredFilmGlobal = await payload.findGlobal({
     slug: 'featured-film',
-    depth: 2, // Get nested media files
+    depth: 3, // Get nested media files
   })
 
-  return featuredFilmGlobal?.film as Film | null
+  // Handle case where film might be a relationship ID or populated object
+  const filmData = featuredFilmGlobal?.film
+
+  // If it's just an ID, fetch the full film
+  if (typeof filmData === 'string' || typeof filmData === 'number') {
+    const film = await payload.findByID({
+      collection: 'films',
+      id: filmData,
+      depth: 2,
+      draft: true, // Include drafts
+    })
+    return film as Film | null
+  }
+
+  return filmData as Film | null
 }
 
 export default async function FeaturedPage() {
