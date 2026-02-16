@@ -5,11 +5,8 @@ import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
-import { Categories } from './collections/Categories'
 import { Films } from './collections/Films'
 import { Media } from './collections/Media'
-import { Pages } from './collections/Pages'
-import { Posts } from './collections/Posts'
 import { SignUps } from './collections/SignUps'
 import { Users } from './collections/Users'
 import { FeaturedFilm } from './globals/FeaturedFilm'
@@ -23,28 +20,6 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     user: Users.slug,
-    livePreview: {
-      breakpoints: [
-        {
-          label: 'Mobile',
-          name: 'mobile',
-          width: 375,
-          height: 667,
-        },
-        {
-          label: 'Tablet',
-          name: 'tablet',
-          width: 768,
-          height: 1024,
-        },
-        {
-          label: 'Desktop',
-          name: 'desktop',
-          width: 1440,
-          height: 900,
-        },
-      ],
-    },
   },
   editor: lexicalEditor(),
   db: vercelPostgresAdapter({
@@ -52,7 +27,7 @@ export default buildConfig({
       connectionString: process.env.POSTGRES_URL || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users, Films, SignUps],
+  collections: [Media, Users, Films, SignUps],
   cors: [process.env.NEXT_PUBLIC_SERVER_URL || ''].filter(Boolean),
   globals: [FeaturedFilm],
   plugins: [],
