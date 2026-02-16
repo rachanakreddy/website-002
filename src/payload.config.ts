@@ -6,10 +6,13 @@ import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
+import { Films } from './collections/Films'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
+import { SignUps } from './collections/SignUps'
 import { Users } from './collections/Users'
+import { FeaturedFilm } from './globals/FeaturedFilm'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -49,9 +52,9 @@ export default buildConfig({
       connectionString: process.env.POSTGRES_URL || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [Pages, Posts, Media, Categories, Users, Films, SignUps],
   cors: [process.env.NEXT_PUBLIC_SERVER_URL || ''].filter(Boolean),
-  globals: [],
+  globals: [FeaturedFilm],
   plugins: [],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
