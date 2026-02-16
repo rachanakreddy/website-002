@@ -76,9 +76,9 @@ export default async function FeaturedPage() {
       longInformation={film.longInformation}
       image1Url={image1?.url ?? undefined}
       image2Url={image2?.url ?? undefined}
-      qa1={film.qa1 || { question: '', answer: '' }}
-      qa2={film.qa2 || { question: '', answer: '' }}
-      qa3={film.qa3 || { question: '', answer: '' }}
+      qa1={{ question: film.qa1?.question || '', answer: film.qa1?.answer || '' }}
+      qa2={{ question: film.qa2?.question || '', answer: film.qa2?.answer || '' }}
+      qa3={{ question: film.qa3?.question || '', answer: film.qa3?.answer || '' }}
     />
   )
 }
