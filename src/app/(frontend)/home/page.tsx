@@ -1,21 +1,18 @@
 'use client'
 
 import React from 'react'
-import { LogoAnimation } from '@/components/animations'
 import { NavBar } from '@/components/navigation'
 
 export default function HomePage() {
   return (
-    <main className="relative min-h-screen">
+    <main
+      className="fixed inset-0 w-screen h-screen bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: 'url(/backgrounds/home-bg.png)' }}
+    >
       {/* Navigation */}
-      <header className="fixed top-0 left-0 right-0 z-50 p-6">
+      <header className="fixed top-0 left-0 right-0 z-50 p-4 md:p-6">
         <NavBar className="justify-center" />
       </header>
-
-      {/* Main content - centered logo */}
-      <div className="flex items-center justify-center min-h-screen">
-        <LogoAnimation className="w-96 h-96" />
-      </div>
     </main>
   )
 }

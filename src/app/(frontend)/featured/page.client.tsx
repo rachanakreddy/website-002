@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from 'react'
 import Image from 'next/image'
+import { NavBar } from '@/components/navigation'
 
 type QA = {
   question: string
@@ -186,8 +187,23 @@ export default function FeaturedPageClient({
   }
 
   return (
-    <main className="bg-[#f5f5f5] flex flex-col overflow-y-auto" style={{ height: '150vh', fontFamily: 'Arial, sans-serif', color: darkGray }}>
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-8 md:gap-12 py-8 md:py-12">
+    <main
+      className="w-full bg-no-repeat overflow-y-auto"
+      style={{
+        backgroundImage: 'url(/backgrounds/featured-bg.png)',
+        backgroundSize: '100% auto',
+        backgroundPosition: 'top center',
+        height: 'calc(100vw * 3000 / 2360)',
+        fontFamily: 'Arial, sans-serif',
+        color: darkGray
+      }}
+    >
+      {/* Navigation */}
+      <header className="fixed top-0 left-0 right-0 z-50 p-4 md:p-6">
+        <NavBar className="justify-center" />
+      </header>
+
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-8 md:gap-12 pt-20 pb-8 md:pt-24 md:pb-12">
         {/* Left Column */}
         <div className="space-y-6">
           {/* Big Video Player */}
@@ -247,9 +263,9 @@ export default function FeaturedPageClient({
 
           {/* Q&A Section */}
           <div className="pt-4">
-            <h3 className="mb-4" style={{ color: darkGray }}>
-              <span style={{ fontFamily: '"lores-12", sans-serif', fontSize: '28px', fontWeight: 'bold' }}>question&</span>
-              <span style={{ fontFamily: '"lores-12", sans-serif', fontSize: '28px', fontWeight: 'bold' }}>ANSWER</span>
+            <h3 className="mb-6" style={{ color: darkGray }}>
+              <span style={{ fontFamily: '"lores-12", sans-serif', fontSize: '42px', fontWeight: 'bold' }}>question</span>
+              <span style={{ fontFamily: '"Good Times", sans-serif', fontSize: '42px' }}>&ANSWER</span>
             </h3>
 
             <QAItem

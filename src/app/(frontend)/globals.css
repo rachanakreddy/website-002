@@ -3,6 +3,14 @@
 
 @config '../../../tailwind.config.mjs';
 
+@font-face {
+  font-family: 'Good Times';
+  src: url('/fonts/Good Times Rg.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is([data-theme='dark'] *));
 @custom-variant sm (@media (width >= theme(--breakpoint-sm)));
 @custom-variant md (@media (width >= theme(--breakpoint-md)));

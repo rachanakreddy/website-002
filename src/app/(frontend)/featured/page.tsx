@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { Film, Media } from '@/payload-types'
 import FeaturedPageClient from './page.client'
+import { NavBar } from '@/components/navigation'
 
 async function getFeaturedFilm() {
   const payload = await getPayload({ config: configPromise })
@@ -20,10 +21,23 @@ export default async function FeaturedPage() {
 
   if (!film) {
     return (
-      <main className="min-h-screen bg-[#f0f0f0] flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">No Featured Film</h1>
-          <p className="text-gray-600">Please select a featured film in the admin panel.</p>
+      <main
+        className="w-full bg-no-repeat"
+        style={{
+          backgroundImage: 'url(/backgrounds/featured-bg.png)',
+          backgroundSize: '100% auto',
+          backgroundPosition: 'top center',
+          height: 'calc(100vw * 3000 / 2360)',
+        }}
+      >
+        <header className="fixed top-0 left-0 right-0 z-50 p-4 md:p-6">
+          <NavBar className="justify-center" />
+        </header>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">No Featured Film</h1>
+            <p className="text-gray-600">Please select a featured film in the admin panel.</p>
+          </div>
         </div>
       </main>
     )

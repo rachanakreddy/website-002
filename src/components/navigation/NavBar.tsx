@@ -10,27 +10,34 @@ interface NavBarProps {
 }
 
 const navItems = [
-  { href: '/home', label: 'Home' },
-  { href: '/featured', label: 'Featured' },
-  { href: '/directory', label: 'Directory' },
+  { href: '/home', label: 'home' },
+  { href: '/featured', label: 'featured' },
+  { href: '/directory', label: 'directory' },
 ]
 
 export function NavBar({ className = '' }: NavBarProps) {
   const pathname = usePathname()
 
   return (
-    <nav className={cn('flex items-center gap-8', className)}>
-      {navItems.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          className={cn(
-            'text-lg transition-colors hover:text-gray-600',
-            pathname === item.href ? 'font-bold' : 'font-normal'
+    <nav
+      className={cn('flex items-center', className)}
+      style={{ fontFamily: 'lores-12, monospace' }}
+    >
+      {navItems.map((item, index) => (
+        <React.Fragment key={item.href}>
+          <Link
+            href={item.href}
+            className={cn(
+              'text-base md:text-lg transition-colors hover:opacity-70',
+              pathname === item.href ? 'underline' : ''
+            )}
+          >
+            {item.label}
+          </Link>
+          {index < navItems.length - 1 && (
+            <span className="mx-2 md:mx-3">&gt;</span>
           )}
-        >
-          {item.label}
-        </Link>
+        </React.Fragment>
       ))}
     </nav>
   )

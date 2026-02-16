@@ -24,14 +24,17 @@ export default async function DirectoryPage() {
   const members = await getDirectoryMembers()
 
   return (
-    <main className="relative min-h-screen">
+    <main
+      className="min-h-screen bg-cover bg-center bg-no-repeat bg-fixed"
+      style={{ backgroundImage: 'url(/backgrounds/directory-bg.png)' }}
+    >
       {/* Navigation */}
-      <header className="fixed top-0 left-0 right-0 z-50 p-6">
+      <header className="fixed top-0 left-0 right-0 z-50 p-4 md:p-6">
         <NavBar className="justify-center" />
       </header>
 
       {/* Main content */}
-      <div className="pt-24 pb-12 px-8 md:px-12">
+      <div className="pt-20 pb-12 px-8 md:pt-24 md:px-12">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold mb-8 text-center">Directory</h1>
 

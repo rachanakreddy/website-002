@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 
 import { cn } from '@/lib/cn'
 import { GeistMono } from 'geist/font/mono'
@@ -25,4 +25,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 export const metadata: Metadata = {
   title: 'Website',
   description: 'Welcome to the website',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 }
