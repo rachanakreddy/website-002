@@ -227,8 +227,8 @@ export default function LandingPage() {
         <img
           src="/accents/plaster-wall-text-1.png"
           alt=""
-          className="absolute w-full h-full object-contain pointer-events-none"
-          style={{ zIndex: 2, transform: 'scale(1.01)' }}
+          className="absolute inset-0 w-full h-auto min-h-full object-cover pointer-events-none"
+          style={{ zIndex: 2 }}
         />
 
         {/* Enter button PNG - clickable layer */}
