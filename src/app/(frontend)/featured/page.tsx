@@ -56,8 +56,8 @@ export default async function FeaturedPage() {
       synopsis={film.synopsis}
       videoUrl={videoUrl}
       longInformation={film.longInformation}
-      image1Url={image1?.url}
-      image2Url={image2?.url}
+      image1Url={image1?.url ?? undefined}
+      image2Url={image2?.url ?? undefined}
       qa1={film.qa1}
       qa2={film.qa2}
       qa3={film.qa3}

@@ -10,7 +10,6 @@ export default function LandingPage() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [showWiggling, setShowWiggling] = useState(true) // Start true, will be set false on desktop
   const [showEntry, setShowEntry] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
   const landingVideoRef = useRef<HTMLVideoElement>(null)
   const wigglingVideoRef = useRef<HTMLVideoElement>(null)
   const entryVideoRef = useRef<HTMLVideoElement>(null)
@@ -105,19 +104,12 @@ export default function LandingPage() {
 
   // Trigger entry sequence
   const triggerEntry = useCallback(() => {
-    if (showEntry || isLoading) return // Prevent double trigger
+    if (showEntry) return // Prevent double trigger
 
-    // Show loading when user clicks enter
-    setIsLoading(true)
+    setShowEntry(true)
     wigglingVideoRef.current?.pause()
-
-    // Brief loading, then play entry video
-    setTimeout(() => {
-      setShowEntry(true)
-      setIsLoading(false)
-      entryVideoRef.current?.play().catch(console.error)
-    }, 500)
-  }, [showEntry, isLoading])
+    entryVideoRef.current?.play().catch(console.error)
+  }, [showEntry])
 
   // Check if click/touch is on a non-transparent pixel
   const handleInteraction = useCallback((clientX: number, clientY: number, target: HTMLImageElement) => {
@@ -197,15 +189,6 @@ export default function LandingPage() {
 
   return (
     <main className="fixed inset-0 w-screen h-screen bg-black overflow-hidden">
-      {/* Loading overlay */}
-      {isLoading && (
-        <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center">
-          <div className="text-white text-xl" style={{ fontFamily: 'lores-12, monospace' }}>
-            loading...
-          </div>
-        </div>
-      )}
-
       {/* Hidden canvas for pixel detection */}
       <canvas ref={canvasRef} className="hidden" />
 

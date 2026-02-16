@@ -12,6 +12,11 @@ export default function HomePage() {
     router.prefetch('/featured')
     router.prefetch('/directory')
   }, [router])
+
+  const handleNavigate = (href: string) => {
+    router.push(href)
+  }
+
   return (
     <main className="fixed inset-0 w-screen h-screen overflow-hidden">
       {/* Background - plaster texture */}
@@ -39,8 +44,8 @@ export default function HomePage() {
       />
 
       {/* Navigation */}
-      <header className="fixed top-0 left-0 right-0 z-50 p-1 md:p-2">
-        <HomeNavBar />
+      <header className="fixed top-0 left-0 right-0 z-50">
+        <HomeNavBar onNavigate={handleNavigate} />
       </header>
     </main>
   )
